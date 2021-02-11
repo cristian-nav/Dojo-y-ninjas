@@ -1,0 +1,78 @@
+
+1.Crea el modelo de clase Dojo
+class Dojo(models.Model):
+    name = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    state = models.CharField(max_length=2)
+
+2.Crea el modelo de clase Ninja
+
+class Ninja(models.Model):
+    dojo = models.ForeignKey(Dojo, related_name="ninjas", on_delete = models.CASCADE)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+3.Crea y ejecuta los archivos de migración para crear las tablas en su base de datos.
+python manage.py makemigrations
+python manage.py migrate
+
+4.Ejecuta el shell e importe sus modelos
+python manage.py shell
+from dojo_ninjas_app.models import *
+
+5.Consulta: Crea 3 nuevos dojos
+Dojo.objects.create(name="DOJO KOREA",city="SEOUL",state="KR")
+Dojo.objects.create(name="DOJO CHINA",city="SHANGHAI",state="CH")
+Dojo.objects.create(name="DOJO JAPAN",city="TOKYO",state="JP")
+
+
+6.Consulta: elimina los 3 dojos que acaba de crear
+d = Dojo.objects.all()
+d.delete()
+(3, {'dojo_ninjas_app.Dojo': 3})
+
+7.Consulta: Crea 3 dojos más
+Dojo.objects.create(name="DOJO TAIWAN",city="TAIPEI",state="TW")
+Dojo.objects.create(name="DOJO HONG KONG",city="KOWLOON",state="HK")
+Dojo.objects.create(name="DOJO VIETNAM",city="HO CHI MINH",state="VT")
+
+8.Consulta: crea 3 ninjas que pertenecen al primer dojo
+nt = Ninja.objects.create(dojo=Dojo.objects.get(id=4),first_name="ninja 1",last_name="taiwan 1")
+nt = Ninja.objects.create(dojo=Dojo.objects.get(id=4),first_name="ninja 2",last_name="taiwan 2")
+nt = Ninja.objects.create(dojo=Dojo.objects.get(id=4),first_name="ninja 3",last_name="taiwan 3")
+
+9.Consulta: crea 3 ninjas que pertenecen al segundo dojo
+nhk = Ninja.objects.create(dojo=Dojo.objects.get(id=5),first_name="ninja 1",last_name="hongkong 1")
+nhk = Ninja.objects.create(dojo=Dojo.objects.get(id=5),first_name="ninja 2",last_name="hongkong 2")
+nhk = Ninja.objects.create(dojo=Dojo.objects.get(id=5),first_name="ninja 3",last_name="hongkong 3")
+
+10.Consulta: crea 3 ninjas que pertenecen al tercer dojo
+nv = Ninja.objects.create(dojo=Dojo.objects.get(id=6),first_name="ninja 1",last_name="vietnam 1")
+nv = Ninja.objects.create(dojo=Dojo.objects.get(id=6),first_name="ninja 2",last_name="vietnam 2")
+nv = Ninja.objects.create(dojo=Dojo.objects.get(id=6),first_name="ninja 3",last_name="vietnam 3")
+
+11.Consulta: recupera todos los ninjas del primer dojo
+Ninja.objects.filter(dojo=Dojo.objects.first())
+
+12.Consulta: recupera todos los ninjas del último dojo
+Ninja.objects.filter(dojo=Dojo.objects.last())
+
+13.Consulta: recupera el último dojo del ninja
+un = Ninja.objects.last()
+Dojo.objects.filter(id=un.dojo_id)
+
+14.Agrega un nuevo campo de texto llamado "desc" a su clase de Dojo
+class Dojo(models.Model):
+    name = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    state = models.CharField(max_length=2)
+    desc = models.CharField(("dojo antiguo"), max_length=50)
+
+15.Crea y ejecuta los archivos de migración para actualizar la tabla en su base de datos. Si es necesario, proporcione un valor predeterminado de "dojo antiguo"
+python manage.py makemigrations
+python manage.py migrate
+
+16.Consulta: crear un nuevo dojo
+Dojo.objects.create(name="DOJO AUSTRALIA",city="SYDNEY",state="AU",desc="dojo old")
